@@ -13,26 +13,26 @@
             <h1>FACTURA DE VENTA</h1>
             <div class="header_left">
                 <asp:Label runat="server" Text="idCliente"></asp:Label>
-                <asp:TextBox ID="txtIdCliente" runat="server"></asp:TextBox>
+                <asp:TextBox ID="txtIdCliente" runat="server" required="true" TextMode="Number" oninput="validarNumeroPositivo(this)"></asp:TextBox>
 
                 <asp:Label runat="server" Text="Nombre"></asp:Label>
-                <asp:TextBox ID="txtNombre" runat="server"></asp:TextBox>
+                <asp:TextBox ID="txtNombre" runat="server" required="true"></asp:TextBox>
 
                 <asp:Label runat="server" Text="Celular"></asp:Label>
-                <asp:TextBox ID="txtCelular" runat="server"></asp:TextBox>
+                <asp:TextBox ID="txtCelular" runat="server" required="true" TextMode="Number" oninput="validarNumeroPositivo(this)"></asp:TextBox>
             </div>
             <div class="header_right">
                 <asp:Label runat="server" Text="idProducto"></asp:Label>
-                <asp:TextBox ID="txtIdProducto" runat="server"></asp:TextBox>
+                <asp:TextBox ID="txtIdProducto" runat="server" required="true" TextMode="Number" oninput="validarNumeroPositivo(this)"></asp:TextBox>
 
                 <asp:Label runat="server" Text="Nombre Producto"></asp:Label>
-                <asp:TextBox ID="txtNombreProducto" runat="server"></asp:TextBox>
+                <asp:TextBox ID="txtNombreProducto" runat="server" required="true"></asp:TextBox>
 
                 <asp:Label runat="server" Text="Precio"></asp:Label>
-                <asp:TextBox ID="txtPrecio" runat="server"></asp:TextBox>
+                <asp:TextBox ID="txtPrecio" runat="server" required="true" TextMode="Number" oninput="validarNumeroPositivo(this)"></asp:TextBox>
 
                 <asp:Label runat="server" Text="Cantidad"></asp:Label>
-                <asp:TextBox ID="txtCantidad" runat="server"></asp:TextBox>
+                <asp:TextBox ID="txtCantidad" runat="server" required="true" TextMode="Number" oninput="validarNumeroPositivo(this)"></asp:TextBox>
             </div>
             <asp:Button ID="calcularTablaIngreso" runat="server" Text="Calcular" OnClick="calcularTablaIngreso_Click" />
         </header>
@@ -47,20 +47,24 @@
                         <th class="tabla_th">Neto</th>
                     </tr>
                     <tr class="tabla_datos">
-                        <td id="txtSubTotal" class="tabla_td" runat="server"></td>
-                        <td id="txtDescuento" class="tabla_td" runat="server"></td>
-                        <td id="txtIva" class="tabla_td" runat="server"></td>
-                        <td id="txtNeto" class="tabla_td" runat="server"></td>
+                        <td id="txtSubTotal" class="tabla_td" runat="server">0</td>
+                        <td id="txtDescuento" class="tabla_td" runat="server">0</td>
+                        <td id="txtIva" class="tabla_td" runat="server">0</td>
+                        <td id="txtNeto" class="tabla_td" runat="server">0</td>
                     </tr>
                 </table>
-                <asp:Button ID="BtnAgregar" runat="server" Text="Agregar"/>
-                <asp:Button ID="BtnLimpiar" runat="server" Text="Limpiar" OnClick="BtnLimpiar_Click"/>
-                <asp:Button ID="BtnNueva" runat="server" Text="Nueva"/>
+                <asp:Button ID="BtnAgregar" runat="server" Text="Agregar Factura" OnClick="BtnAgregar_Click" Visible="False"/>
+                <asp:Button ID="BtnNueva" runat="server" Text="Nueva Factura" OnClick="BtnNueva_Click" Visible="False"/>
             </div>
 
             <div class="output">
                 <asp:GridView ID="TablaSalida" class="tabla_salida" runat="server" AutoGenerateColumns="False">
                     <Columns>
+                        <asp:BoundField DataField="idFactura" HeaderText="ID Factura" />
+                        <asp:BoundField DataField="idCliente" HeaderText="ID Cliente" />
+                        <asp:BoundField DataField="idProducto" HeaderText="ID Producto" />
+                        <asp:BoundField DataField="Cantidad" HeaderText="Cantidad" />
+                        <asp:BoundField DataField="Precio" HeaderText="Precio" />
                         <asp:BoundField DataField="Subtotal" HeaderText="Subtotal" />
                         <asp:BoundField DataField="Descuento" HeaderText="Descuento 3%" />
                         <asp:BoundField DataField="Iva" HeaderText="IVA 19%" />
@@ -70,5 +74,6 @@
             </div>
         </main>
     </form>
+    <script src="validarNumPositivo.js"></script>
 </body>
 </html>

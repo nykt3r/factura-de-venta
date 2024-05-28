@@ -14,33 +14,25 @@ namespace FacturaDeVenta
         {
             if (!IsPostBack)
             {
-                // Crear una tabla en memoria para llenar el GridView
+                //Crear una tabla en memoria para llenar el GridView
                 DataTable dt = new DataTable();
+                dt.Columns.Add("idFactura");
+                dt.Columns.Add("idCliente");
+                dt.Columns.Add("idProducto");
+                dt.Columns.Add("Cantidad");
+                dt.Columns.Add("Precio");
                 dt.Columns.Add("Subtotal");
                 dt.Columns.Add("Descuento");
                 dt.Columns.Add("Iva");
                 dt.Columns.Add("Neto");
 
-                // Agregar filas de datos
-                DataRow dr1 = dt.NewRow();
-                dr1["Subtotal"] = "1000";
-                dr1["Descuento"] = "30";
-                dr1["Iva"] = "190";
-                dr1["Neto"] = "1160";
-                dt.Rows.Add(dr1);
-
-                DataRow dr2 = dt.NewRow();
-                dr2["Subtotal"] = "2000";
-                dr2["Descuento"] = "60";
-                dr2["Iva"] = "380";
-                dr2["Neto"] = "2320";
-                dt.Rows.Add(dr2);
-
-                // Asignar el DataTable al GridView
+                //Asignar la tabla vacía al GridView
                 TablaSalida.DataSource = dt;
                 TablaSalida.DataBind();
-            }
 
+                //Guardar la tabla en la sesión
+                Session["FacturaTable"] = dt;
+            }
         }
 
         protected void calcularTablaIngreso_Click(object sender, EventArgs e)
@@ -49,59 +41,125 @@ namespace FacturaDeVenta
             string idCliente = txtIdCliente.Text;
             string nombreCliente = txtNombre.Text;
             string celularCliente = txtCelular.Text;
+            Cliente cliente = new Cliente(idCliente, nombreCliente, celularCliente); //Crea Cliente con los datos del input
 
             //Captura datos producto
             string idProducto = txtIdProducto.Text;
             string nombreProducto = txtNombreProducto.Text;
             string precio = txtPrecio.Text;
             string cantidad = txtCantidad.Text;
-
+            //Datos producto string a numero
             double precioProducto = double.Parse(precio);
-            double cantidadProducto = double.Parse(cantidad);
+            int cantidadProducto = int.Parse(cantidad);
+            Producto producto = new Producto(idProducto, nombreProducto, precioProducto, cantidadProducto); //Crea Producto con los datos del input
 
             //Calcular Subtotal
-            double subTotal = calcularSubTotal(precioProducto, cantidadProducto);
+            double subTotal = producto.calcularSubTotal();
             txtSubTotal.InnerText = subTotal.ToString();
-
             //Calcular Descuento
-            double descuento = calcularDescuento(subTotal);
+            double descuento = producto.calcularDescuento(subTotal);
             txtDescuento.InnerText = descuento.ToString();
-
             //Calcular Iva
-            double iva = calcularIva(subTotal);
+            double iva = producto.calcularIva(subTotal);
             txtIva.InnerText = iva.ToString();
-
             //Calcular Neto
-            double neto = calcularNeto(subTotal, descuento, iva);
+            double neto = producto.calcularNeto(subTotal, descuento, iva);
             txtNeto.InnerText = neto.ToString();
+
+            string idFactura = idCliente + idProducto;
+            Factura factura = new Factura(idFactura, cliente, producto, subTotal, descuento, iva, neto); //Crea Factura
+
+            //Guardar la factura en la sesión
+            Session["CurrentFactura"] = factura;
+
+            txtIdCliente.Enabled = false;
+            txtNombre.Enabled = false;
+            txtCelular.Enabled = false;
+            txtIdProducto.Enabled = false;
+            txtNombreProducto.Enabled = false;
+            txtPrecio.Enabled = false;
+            txtCantidad.Enabled = false;
+
+            BtnAgregar.Visible = true;
+            BtnNueva.Visible = true;
         }
 
-        public double calcularSubTotal(double precio, double cantidad)
+        protected void BtnNueva_Click(object sender, EventArgs e)
         {
-            return precio * cantidad;
+            //Limpiando tabla calculada
+            txtSubTotal.InnerText = "0";
+            txtDescuento.InnerText = "0";
+            txtIva.InnerText = "0";
+            txtNeto.InnerText = "0";
+
+            //Limpiando inputs de factura
+            txtIdCliente.Text = ""; 
+            txtNombre.Text = "";
+            txtCelular.Text = "";
+            txtIdProducto.Text = "";
+            txtNombreProducto.Text = "";
+            txtPrecio.Text = "";
+            txtCantidad.Text = "";
+
+            BtnAgregar.Visible = false;
+            BtnNueva.Visible = false;
+
+            txtIdCliente.Enabled = true;
+            txtNombre.Enabled = true;
+            txtCelular.Enabled = true;
+            txtIdProducto.Enabled = true;
+            txtNombreProducto.Enabled = true;
+            txtPrecio.Enabled = true;
+            txtCantidad.Enabled = true;
         }
 
-        public double calcularDescuento(double subTotal)
+        protected void BtnAgregar_Click(object sender, EventArgs e)
         {
-            return subTotal * 0.03;
-        }
+            //Recuperar la tabla de la sesión
+            DataTable dt = (DataTable)Session["FacturaTable"];
+            Factura factura = (Factura)Session["CurrentFactura"];
 
-        public double calcularIva(double subTotal)
-        {
-            return subTotal * 0.19;
-        }
+            if (factura != null)
+            {
+                DataRow dr = dt.NewRow();
+                dr["idFactura"] = factura.idFactura;
+                dr["idCliente"] = factura.cliente.idCliente;
+                dr["idProducto"] = factura.producto.idProducto;
+                dr["Cantidad"] = factura.producto.cantidad;
+                dr["Precio"] = factura.producto.precio;
+                dr["Subtotal"] = factura.subTotal;
+                dr["Descuento"] = factura.descuento;
+                dr["Iva"] = factura.iva;
+                dr["Neto"] = factura.neto;
+                dt.Rows.Add(dr);
 
-        public double calcularNeto(double subTotal, double descuento, double iva)
-        {
-            return subTotal + descuento + iva;
-        }
+                //Asignar la tabla actualizada al GridView
+                TablaSalida.DataSource = dt;
+                TablaSalida.DataBind();
 
-        protected void BtnLimpiar_Click(object sender, EventArgs e)
-        {
-            txtSubTotal.InnerText = "";
-            txtDescuento.InnerText = "";
-            txtIva.InnerText = "";
-            txtNeto.InnerText = "";
+                //Guardar la tabla actualizada en la sesión
+                Session["FacturaTable"] = dt;
+
+                //Limpiando tabla calculada
+                txtSubTotal.InnerText = "0";
+                txtDescuento.InnerText = "0";
+                txtIva.InnerText = "0";
+                txtNeto.InnerText = "0";
+
+                //Limpiando inputs de producto
+                txtIdProducto.Text = "";
+                txtNombreProducto.Text = "";
+                txtPrecio.Text = "";
+                txtCantidad.Text = "";
+
+                BtnAgregar.Visible = false;
+                BtnNueva.Visible = false;
+
+                txtIdProducto.Enabled = true;
+                txtNombreProducto.Enabled = true;
+                txtPrecio.Enabled = true;
+                txtCantidad.Enabled = true;
+            }
         }
     }
 }
