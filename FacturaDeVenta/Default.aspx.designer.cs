@@ -24,6 +24,15 @@ namespace FacturaDeVenta
         protected global::System.Web.UI.HtmlControls.HtmlForm FormularioFacturaVenta;
 
         /// <summary>
+        /// Control headerDescription.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlGenericControl headerDescription;
+
+        /// <summary>
         /// Control txtIdCliente.
         /// </summary>
         /// <remarks>
@@ -49,6 +58,15 @@ namespace FacturaDeVenta
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
         protected global::System.Web.UI.WebControls.TextBox txtCelular;
+
+        /// <summary>
+        /// Control calcularTablaIngreso.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Button calcularTablaIngreso;
 
         /// <summary>
         /// Control txtIdProducto.
@@ -85,15 +103,6 @@ namespace FacturaDeVenta
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
         protected global::System.Web.UI.WebControls.TextBox txtCantidad;
-
-        /// <summary>
-        /// Control calcularTablaIngreso.
-        /// </summary>
-        /// <remarks>
-        /// Campo generado automáticamente.
-        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Button calcularTablaIngreso;
 
         /// <summary>
         /// Control txtSubTotal.

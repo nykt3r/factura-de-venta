@@ -12,9 +12,10 @@ namespace FacturaDeVenta
     {
         protected void Page_Load(object sender, EventArgs e)
         {
-            if (!IsPostBack)
+            if (!IsPostBack) 
             {
-                //Crear una tabla en memoria para llenar el GridView
+                headerDescription.InnerText = DateTime.Now.ToString("dd MMMM yyyy");
+
                 DataTable dt = new DataTable();
                 dt.Columns.Add("idFactura");
                 dt.Columns.Add("idCliente");
@@ -26,11 +27,9 @@ namespace FacturaDeVenta
                 dt.Columns.Add("Iva");
                 dt.Columns.Add("Neto");
 
-                //Asignar la tabla vacía al GridView
                 TablaSalida.DataSource = dt;
                 TablaSalida.DataBind();
 
-                //Guardar la tabla en la sesión
                 Session["FacturaTable"] = dt;
             }
         }
